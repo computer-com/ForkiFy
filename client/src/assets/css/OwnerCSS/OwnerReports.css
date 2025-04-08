@@ -1,0 +1,132 @@
+/* OwnerReports.css */
+.reports-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #111;
+  color: white;
+}
+
+.reports-top-bar {
+  display: flex;
+  align-items: center;
+  height: 80px;
+  background-color: #1b1212;
+  border-bottom: 2px solid #FF8303;
+  padding: 0 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1100;
+}
+
+.reports-menu-icon {
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.reports-logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.reports-logo-img {
+  width: 40px;
+  margin-right: 10px;
+}
+
+.reports-logo-text {
+  font-size: 24px;
+  color: #FF8303;
+}
+
+.reports-page-title {
+  margin-left: auto;
+  font-size: 24px;
+  color: #FF8303;
+}
+
+.reports-main-content {
+  flex: 1;
+  padding: 40px;
+  background-color: #1c1c1c;
+  margin-top: 375px; /* Height of topbar */
+  margin-bottom: 180px; /* Height of footer */
+  overflow-y: auto;
+  margin-left: 0; /* No margin when sidebar is closed */
+  transition: margin-left 0.3s ease-in-out;
+  margin-right: 0px;
+}
+
+.reports-main-content.sidebar-open {
+  margin-left: 250px;
+  margin-top: 600px; /* Adjust margin when sidebar is open */
+}
+
+.reports-content-section {
+  background: #1b1212;
+  padding: 80px 200px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  border-radius: 8px;
+  border: 2px solid #FF8303;
+}
+
+.reports-content-section h2 {
+  font-size: 2rem;
+  color: #FF8303;
+  margin-bottom: 20px;
+}
+
+.reports-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.reports-table th,
+.reports-table td {
+  padding: 25px;
+  text-align: left;
+  border-bottom: 1px solid #FF8303;
+}
+
+.reports-table th {
+  background-color: #2a1a1a;
+  color: #FF8303;
+}
+
+.reports-table td {
+  color: #ccc;
+}
+
+.reports-download-btn {
+  background-color: #FF8303;
+  color: black;
+  font-weight: bold;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.reports-download-btn:hover {
+  background-color: #cc6e02;
+}
+
+.reports-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #1B1212;
+  border-top: 2px solid #FF8303;
+  z-index: 1000;
+}
+
+.reports-error {
+  color: red;
+  margin-bottom: 10px;
+  text-align: center;
+}
