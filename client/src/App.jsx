@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 //icons
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -70,6 +70,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/forkify" element={<Navigate to="/" replace />} />
         <Route path="/" element={<LoginOptions />} />
         <Route path="/adminoptions" element={<AdminOptions />} />
         <Route path="/signin" element={<SignIn />} />
