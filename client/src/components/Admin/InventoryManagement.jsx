@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/AdminCSS/Inventory.css";
 import logo from "../../assets/images/Forkify_Logo.png";
@@ -17,8 +17,8 @@ const InventoryManagement = () => {
 
   // Fetch Inventory Data
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/inventory")
+    api
+      .get("/api/inventory")
       .then((response) => setInventory(response.data))
       .catch((error) => console.error("Error fetching inventory:", error));
   }, []);
@@ -31,8 +31,8 @@ const InventoryManagement = () => {
   // Add New Inventory Item
   const handleAddItem = () => {
     if (newItem.name && newItem.quantity && newItem.price && newItem.category) {
-      axios
-        .post("http://localhost:5000/api/inventory", newItem)
+      api
+        .post("/api/inventory", newItem)
         .then((response) => {
           setInventory([...inventory, response.data]);
           setNewItem({ name: "", quantity: "", price: "", category: "" });
@@ -45,8 +45,8 @@ const InventoryManagement = () => {
 
   // Delete Inventory Item
   const handleDelete = (id) => {
-    axios
-      .delete(`http://localhost:5000/api/inventory/${id}`)
+    api
+      .delete(`/api/inventory/${id}`)
       .then(() => setInventory(inventory.filter((item) => item._id !== id)))
       .catch((error) => console.error("Error deleting item:", error));
   };
@@ -67,8 +67,8 @@ const InventoryManagement = () => {
       return;
     }
     try {
-      const response = await axios.put(
-        `http://localhost:5000/api/inventory/${editMode}`,
+      const response = await api.put(
+        `/api/inventory/${editMode}`,
         editItem,
         {
           headers: { "Content-Type": "application/json" },

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../../../services/api";
 import logo from "../../../assets/images/Forkify_Logo.png";
 import Footer from "../UserFooter";
 import "../../../assets/css/UserCSS/restauranthome.css";
@@ -26,7 +26,7 @@ const RestaurantHomePage = () => {
   useEffect(() => {
     const fetchRestaurant = async () => {
       try {
-        const res = await axios.get(`/api/restaurants/id/${id}`);
+        const res = await api.get(`/api/restaurants/id/${id}`);
         setRestaurant(res.data);
       } catch (error) {
         console.error("Error fetching restaurant:", error);
@@ -40,7 +40,7 @@ const RestaurantHomePage = () => {
   useEffect(() => {
     const fetchMenu = async () => {
       try {
-        const res = await axios.get(`/api/menu?restaurantId=${id}`);
+        const res = await api.get(`/api/menu?restaurantId=${id}`);
         setMenuItems(res.data);
       } catch (error) {
         console.error("Error fetching menu items:", error);
@@ -56,7 +56,7 @@ const RestaurantHomePage = () => {
     e.preventDefault();
  
     try {
-      const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+      const token = localStorage.getItem("token");
       if (!token) {
         alert("You must be signed in to reserve a table.");
         return;
@@ -76,13 +76,9 @@ const RestaurantHomePage = () => {
         email: formData.email,
       };
 
-      console.log("Reservation Payload:", reservationPayload);  // Log the payload
+      console.log("Reservation Payload:", reservationPayload);
 
-      await axios.post(`/api/reservation`, reservationPayload, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Send the token in headers
-        },
-      });
+      await api.post(`/api/reservation`, reservationPayload);
  
       setSuccessMsg("Your reservation was successfully placed!");
       setShowModal(false);

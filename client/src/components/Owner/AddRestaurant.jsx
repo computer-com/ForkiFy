@@ -1,35 +1,31 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../../assets/css/OwnerCSS/AddRestaurant.css";
 import OwnerSidebar from "./OwnerSidebar";
 import OwnerFooter from "./OwnerFooter";
 import { FiMenu } from "react-icons/fi";
 import logo from "../../assets/images/Forkify_Logo.png";
-import "../../assets/css/OwnerCSS/AddRestaurant.css";
+import api from "../../services/api";
 
 const AddRestaurant = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false); 
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
-    cuisine: "",
+    address: "",
     city: "",
-    image: "",
+    state: "",
+    zipCode: "",
+    phone: "",
+    email: "",
+    cuisine: "",
     description: "",
-    timeSlots: "",
+    openingHours: "",
     managerName: "",
     managerEmail: "",
-    managerPassword: "",
-    hours: "",
-    priceRange: "",
-    address: "",
-    diningStyle: "",
-    dressCode: "",
-    parking: "",
-    paymentOptions: "",
-    chef: "",
-    extraInfo: "",
+    managerPhone: "",
   });
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,25 +34,7 @@ const AddRestaurant = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const missingFields = [];
-    if (!formData.name) missingFields.push("Name");
-    if (!formData.cuisine) missingFields.push("Cuisine");
-    if (!formData.city) missingFields.push("City");
-    if (!formData.timeSlots) missingFields.push("Time Slots");
-    if (!formData.managerName.trim()) missingFields.push("Manager Name");
-    if (!formData.managerEmail) missingFields.push("Manager Email");
-    if (!formData.managerPassword) missingFields.push("Manager Password");
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (emailRegex.test(formData.managerName)) {
-      missingFields.push("Manager Name (should not be an email address)");
-    }
-
-    if (missingFields.length > 0) {
-      setError(`Please fill in the following required fields: ${missingFields.join(", ")}`);
-      return;
-    }
+    setError("");
 
     try {
       const token = localStorage.getItem("ownerToken");
@@ -65,20 +43,7 @@ const AddRestaurant = () => {
       console.log("Form data being sent:", formData);
       console.log("Manager Name specifically:", formData.managerName);
 
-      const response = await fetch("http://localhost:5000/api/restaurants/owner", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const responseData = await response.json();
-      if (!response.ok) {
-        throw new Error(responseData.message || "Failed to add restaurant");
-      }
-
+      const response = await api.post("/api/restaurants/owner", formData);
       navigate("/owner/dashboard");
     } catch (err) {
       console.error("Submission error:", err.message);

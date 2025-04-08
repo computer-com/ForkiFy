@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Carousel } from "react-bootstrap";
 import ownerSignIn1 from "../../assets/images/adminSignIn1.jpg";
 import ownerSignIn2 from "../../assets/images/adminSignIn2.jpg";
+import api from "../../services/api";
 
 const OwnerSignIn = () => {
   const navigate = useNavigate();
@@ -30,22 +31,14 @@ const OwnerSignIn = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/owner", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || "Invalid credentials");
-      }
+      const response = await api.post("/api/auth/owner", { email, password });
+      const data = response.data;
 
       localStorage.setItem("ownerToken", data.token);
       localStorage.setItem("owner", JSON.stringify(data.owner));
       navigate("/owner/dashboard");
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.error || "Invalid credentials");
     }
   };
 

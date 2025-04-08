@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import { Link } from "react-router-dom";
 import "../../assets/css/AdminCSS/Staff.css";
 import logo from "../../assets/images/Forkify_Logo.png";
@@ -14,16 +14,16 @@ const StaffManagement = () => {
 
   // Fetch Staff Data from API
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/staff")
+    api
+      .get("/api/staff")
       .then((response) => setStaff(response.data))
       .catch((error) => console.error("Error fetching staff:", error));
   }, []);
 
   // Delete Staff Member
   const handleDelete = (id) => {
-    axios
-      .delete(`http://localhost:5000/api/staff/${id}`)
+    api
+      .delete(`/api/staff/${id}`)
       .then(() => setStaff(staff.filter((member) => member._id !== id)))
       .catch((error) => console.error("Error deleting staff:", error));
   };
@@ -36,8 +36,8 @@ const StaffManagement = () => {
   // Add New Staff Member
   const handleAddStaff = () => {
     if (newStaff.name && newStaff.role && newStaff.contact) {
-      axios
-        .post("http://localhost:5000/api/staff", newStaff)
+      api
+        .post("/api/staff", newStaff)
         .then((response) => {
           setStaff([...staff, response.data]);
           setNewStaff({ name: "", role: "", contact: "" });

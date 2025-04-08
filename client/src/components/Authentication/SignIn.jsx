@@ -7,6 +7,7 @@ import appleLogo from "../../assets/images/apple.png";
 import Signup1 from "../../assets/images/Signup1.jpg";
 import Signup2 from "../../assets/images/Signup2.jpg";
 import googleLogo from "../../assets/images/google.png";
+import api from "../../services/api";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -36,25 +37,15 @@ const SignIn = () => {
     if (Object.keys(validationErrors).length > 0) return;
   
     try {
-      const response = await fetch("http://localhost:5000/api/auth/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          phone,
-          countryCode
-        })
+      const response = await api.post("/api/auth/signin", {
+        firstName,
+        lastName,
+        email,
+        phone,
+        countryCode
       });
   
-      const data = await response.json();
-  
-      if (!response.ok) {
-        return alert(data.message || "Sign In failed");
-      }
+      const data = response.data;
   
       // Save token and user info
       localStorage.setItem("token", data.token);

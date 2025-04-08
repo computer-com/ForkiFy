@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../../../services/api';
 import Sidebar from '../Sidebar';
 import Footer from '../Footer';
 import { FiMenu } from 'react-icons/fi';
@@ -21,14 +21,9 @@ const PasswordSettings = () => {
     }
 
     try {
-      const token = JSON.parse(localStorage.getItem("token"));
-      const response = await axios.put('http://localhost:5000/api/settings/password', {
+      const response = await api.put('/api/settings/password', {
         currentPassword,
         newPassword,
-      }, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
       });
 
       if (response.data.success) {

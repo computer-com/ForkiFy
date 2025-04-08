@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
 import "../../assets/css/UserCSS/style.css";
 import googleLogo from "../../assets/images/google.png";
 import appleLogo from "../../assets/images/apple.png";
+import api from "../../services/api";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const Login = () => {
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await axios.post('/api/auth/customer-login', { email, password });
+        const response = await api.post('/api/auth/customer-login', { email, password });
 
         // Save token to localStorage
         localStorage.setItem("token", response.data.token);

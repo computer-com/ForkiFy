@@ -5,55 +5,45 @@ import { FiMenu } from "react-icons/fi";
 import logo from "../../assets/images/Forkify_Logo.png";
 import jsPDF from "jspdf";
 import "../../assets/css/OwnerCSS/OwnerReports.css";
+import api from "../../services/api";
 
 const OwnerReports = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false); // Default to closed for consistency
   const [reports, setReports] = useState([]);
-  const [error, setError] = useState("");
+  const [selectedReport, setSelectedReport] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const token = localStorage.getItem("ownerToken");
-        const response = await fetch("http://localhost:5000/api/restaurants/owner/reports", {
-          headers: {
-            "Authorization": `Bearer ${token}`,
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Failed to fetch reports");
-        }
-        const data = await response.json();
-        setReports(data);
-      } catch (err) {
-        console.error("Error fetching reports:", err);
-        setError(err.message);
+        const response = await api.get("/api/restaurants/owner/reports");
+        setReports(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching reports:", error);
+        setError("Failed to load reports");
+        setLoading(false);
       }
     };
 
     fetchReports();
   }, []);
 
+  const handleReportClick = async (restaurantId) => {
+    try {
+      const response = await api.get(`/api/restaurants/owner/report/${restaurantId}`);
+      setSelectedReport(response.data);
+    } catch (error) {
+      console.error("Error fetching report details:", error);
+      setError("Failed to load report details");
+    }
+  };
+
   const generatePDF = async (restaurantId, restaurantName) => {
     try {
-      const token = localStorage.getItem("ownerToken");
-      const response = await fetch(`http://localhost:5000/api/restaurants/owner/report/${restaurantId}`, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || "Failed to fetch report data");
-        } else {
-          throw new Error("Received an unexpected response from the server");
-        }
-      }
-
-      const reportData = await response.json();
+      const response = await api.get(`/api/restaurants/owner/report/${restaurantId}`);
+      const reportData = response.data;
 
       const doc = new jsPDF();
       

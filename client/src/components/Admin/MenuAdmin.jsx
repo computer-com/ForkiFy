@@ -4,7 +4,7 @@ import "../../assets/css/AdminCSS/menuadmin.css";
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
 import logo from "../../assets/images/Forkify_Logo.png";
-import axios from "axios";
+import api from "../../services/api";
 import { FiMenu } from "react-icons/fi"; 
 
 const manager = JSON.parse(localStorage.getItem("manager"));
@@ -23,12 +23,7 @@ const MenuAdmin = () => {
 
   const fetchMenuItems = async () => {
     try {
-      const token = localStorage.getItem("managerToken");
-      const response = await axios.get(`http://localhost:5000/api/menu?restaurantId=${restaurantId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await api.get(`/api/menu?restaurantId=${restaurantId}`);
       setMenu(response.data);
     } catch (error) {
       console.error("Error fetching menu:", error);
@@ -38,14 +33,9 @@ const MenuAdmin = () => {
   const handleAddItem = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("managerToken");
-      const response = await axios.post("http://localhost:5000/api/menu", {
+      const response = await api.post("/api/menu", {
         ...newItem,
         restaurantId,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       });
       setMenu([...menu, response.data]);
       setNewItem({ name: "", price: "", category: "", description: "" });
@@ -62,12 +52,7 @@ const MenuAdmin = () => {
   const handleSaveEdit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("managerToken");
-      await axios.put(`http://localhost:5000/api/menu/${editItem._id}`, editItem, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await api.put(`/api/menu/${editItem._id}`, editItem);
       const updated = menu.map(item => (item._id === editItem._id ? editItem : item));
       setMenu(updated);
       setIsEditing(false);
@@ -81,12 +66,7 @@ const MenuAdmin = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
       try {
-        const token = localStorage.getItem("managerToken");
-        await axios.delete(`http://localhost:5000/api/menu/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await api.delete(`/api/menu/${id}`);
         setMenu(menu.filter(item => item._id !== id));
       } catch (error) {
         console.error("Error deleting menu item:", error);

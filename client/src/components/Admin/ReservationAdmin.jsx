@@ -4,7 +4,7 @@ import "../../assets/css/AdminCSS/reservationadmin.css";
 import Sidebar from "../Admin/Sidebar";
 import Footer from "../Admin/Footer";
 import logo from "../../assets/images/Forkify_Logo.png";
-import axios from "axios";
+import api from "../../services/api";
 import { FiMenu } from "react-icons/fi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -36,20 +36,12 @@ const ReservationAdmin = () => {
 
   const fetchReservations = async () => {
     try {
-      const token = localStorage.getItem("managerToken");
       const manager = JSON.parse(localStorage.getItem("manager"));
       const restaurantId = manager?.restaurantId;
 
-      if (!token || !restaurantId) return;
+      if (!restaurantId) return;
 
-      const response = await axios.get(
-        `http://localhost:5000/api/reservation/restaurant/${restaurantId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await api.get(`/api/reservation/restaurant/${restaurantId}`);
       setReservations(response.data);
     } catch (error) {
       console.error("Error fetching reservations:", error);
@@ -103,8 +95,8 @@ const ReservationAdmin = () => {
       const manager = JSON.parse(localStorage.getItem("manager"));
       const restaurantId = manager?.restaurantId;
 
-      const response = await axios.post(
-        "http://localhost:5000/api/reservation/manual",
+      const response = await api.post(
+        "/api/reservation/manual",
         {
           ...newReservation,
           date: formattedDate,
@@ -141,8 +133,8 @@ const ReservationAdmin = () => {
     try {
       const formattedDate = editItem.date.toISOString().split("T")[0];
       const token = localStorage.getItem("managerToken");
-      await axios.put(
-        `http://localhost:5000/api/reservation/${editItem._id}`,
+      await api.put(
+        `/api/reservation/${editItem._id}`,
         { ...editItem, date: formattedDate },
         {
           headers: {
@@ -165,7 +157,7 @@ const ReservationAdmin = () => {
     if (window.confirm("Are you sure you want to delete this reservation?")) {
       try {
         const token = localStorage.getItem("managerToken");
-        await axios.delete(`http://localhost:5000/api/reservation/${id}`, {
+        await api.delete(`/api/reservation/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

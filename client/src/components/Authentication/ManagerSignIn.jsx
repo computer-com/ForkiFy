@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Carousel } from "react-bootstrap";
 import adminSignIn1 from "../../assets/images/adminSignIn1.jpg";
 import adminSignIn2 from "../../assets/images/adminSignIn2.jpg";
-import axios from "axios";
+import api from "../../services/api";
 
 const ManagerSignIn = () => {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const ManagerSignIn = () => {
     e.preventDefault();
   
     try {
-      const res = await axios.post('/api/auth/manager', {
+      const res = await api.post('/api/auth/manager', {
         email: credentials.managerId,
         password: credentials.password,
       });
@@ -38,7 +38,6 @@ const ManagerSignIn = () => {
         localStorage.setItem("manager", JSON.stringify(res.data.manager));
       }
       
-  
       navigate('/AdminHome'); // Manager Dashboard
     } catch (err) {
       setError(

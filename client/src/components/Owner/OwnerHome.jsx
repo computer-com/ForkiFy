@@ -5,6 +5,7 @@ import OwnerFooter from "./OwnerFooter";
 import { FiMenu } from "react-icons/fi";
 import logo from "../../assets/images/Forkify_Logo.png";
 import "../../assets/css/OwnerCSS/OwnerDashboard.css";
+import api from "../../services/api";
 
 const OwnerHome = () => {
   const [restaurants, setRestaurants] = useState([]);
@@ -13,10 +14,8 @@ const OwnerHome = () => {
 
   const fetchRestaurants = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/restaurants");
-      if (!response.ok) throw new Error("Failed to fetch restaurants");
-      const data = await response.json();
-      setRestaurants(data);
+      const response = await api.get("/api/restaurants");
+      setRestaurants(response.data);
     } catch (error) {
       console.error("Error fetching restaurants:", error);
       setError("Failed to load restaurants. Please try again later.");

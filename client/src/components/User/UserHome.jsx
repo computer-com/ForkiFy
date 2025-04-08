@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "../../assets/css/UserCSS/UserHome.css";
 import logo from "../../assets/images/Forkify_Logo.png";
 import Footer from "./UserFooter";
-import axios from "axios";
+import api from "../../services/api";
 import { useNavigate } from "react-router-dom";
 
 const UserHome = () => {
@@ -12,12 +12,10 @@ const UserHome = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
 
-
-
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const res = await axios.get("/api/restaurants");
+        const res = await api.get("/api/restaurants");
         setRestaurants(Array.isArray(res.data) ? res.data : []);
         console.log("Fetched data:", res.data);
       } catch (error) {
@@ -60,7 +58,7 @@ const UserHome = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button onClick={() => setSearchTerm(searchTerm.trim())}>Let’s go</button>
+          <button onClick={() => setSearchTerm(searchTerm.trim())}>Let's go</button>
         </div>
       </header>
 
